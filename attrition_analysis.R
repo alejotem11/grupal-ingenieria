@@ -31,8 +31,8 @@ df <- select(df, -c("DailyRate",
 summary(df) #media, min, max, mediana, cuartiles 1 y 3
 
 datosnum <- df[,sapply(df,is.numeric)]
-sapply(datosnum, sd)
-df$AttritionNum <- as.numeric(df$Attrition) #desviaciones estandard
+sapply(datosnum, sd) #desviaciones estandard
+df$AttritionNum <- as.numeric(df$Attrition)
 
 df %>% #histogramas variables numericas y ordinales
   keep(is.numeric) %>%
@@ -59,9 +59,9 @@ datosfac %>% #histogramas variables nominales
     
 
 #3.Exploracion profunda de los datos####
-color.hr <- "darkblue"
-color.dev <- "darkred"
-color.sales <- "darkorange"
+color.hr <- "#7EB9F8"
+color.dev <- "#FD7373"
+color.sales <- "#7AD067"
 
 dep.vector <- c("Human Resources", "Research & Development", "Sales")
 colors.dep.vector <- c(color.hr, color.dev, color.sales)
