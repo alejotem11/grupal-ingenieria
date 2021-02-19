@@ -108,8 +108,8 @@ datosfac %>% #histogramas variables nominales
 
 #3.Exploracion profunda de los datos####
 color.hr <- "#7EB9F8"
-color.dev <- "#FD7373"
-color.sales <- "#7AD067"
+color.dev <- "black"
+color.sales <- "purple"
 
 dep.vector <- c("Human Resources", "Research & Development", "Sales")
 colors.dep.vector <- c(color.hr, color.dev, color.sales)
@@ -129,7 +129,7 @@ analyzeContinuous <- function(df, min, max, groupSize = 5, minRowsToCount = 5, f
 
   plot1 <- df.inner %>%
     ggplot(aes(x=Group, y=Ratio, group=Department, color=Department)) +
-    geom_line() +
+    geom_line(size = 1) +
     scale_color_manual(breaks = dep.vector,
                        values = colors.dep.vector) +
     ylab("Ratio de salidas") + theme_classic()
@@ -154,7 +154,7 @@ analyzeDiscrete <- function(df, field, minRowsToCount = 5) {
   
   df.inner %>%
     ggplot(aes_string(x=field, y="Ratio", group=department, color=department)) +
-    geom_line() +
+    geom_line(size = 1) +
     scale_color_manual(breaks = dep.vector,
                        values = colors.dep.vector) +
     ylab("Ratio de salidas") + theme_classic()
