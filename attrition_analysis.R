@@ -147,7 +147,7 @@ analyzeContinuous(df = df, min = 0, max = 20, field = "YearsInCurrentRole")
 analyzeContinuous(df = df, min = 0, max = 18, groupSize = 3, field = "YearsSinceLastPromotion")
 
 
-#4.Graficas de las variables de interes####
+#4.Variables de interes seleccionadas apartir de las graficas####
 #edad
 #salario
 #distancia
