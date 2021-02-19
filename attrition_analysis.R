@@ -18,13 +18,54 @@ library(gridExtra)
 df <- read.csv("https://raw.githubusercontent.com/alejotem11/grupal-ingenieria/master/attrition_data.csv", stringsAsFactors = T)
 colnames(df)[1] <- "Age"
 
+#Eliminacion de variables
 df <- select(df, -c("DailyRate",
-              "HourlyRate", 
-              "MonthlyRate", 
-              "EmployeeCount", 
-              "EmployeeNumber", 
-              "PerformanceRating", 
-              "StandardHours"))
+                    "HourlyRate", 
+                    "MonthlyRate", 
+                    "EmployeeCount", 
+                    "EmployeeNumber", 
+                    "PerformanceRating", 
+                    "StandardHours"))
+
+#Asignacon de niveles a variables ordinales para histogramas
+df2 <- df
+df2$Education <- as.factor(df2$Education)
+df2$Education <- recode(df2$Education, "1" = "Bachillerato", 
+                                       "2" = "Diplomatura", 
+                                       "3" = "Licenciatura",
+                                       "4" = "Master", 
+                                       "5" = "Docotardo")
+df2$EnvironmentSatisfaction <- as.factor(df2$EnvironmentSatisfaction)
+df2$EnvironmentSatisfaction <- recode(df2$EnvironmentSatisfaction, 
+                                      "1" = "baja", 
+                                      "2" = "media", 
+                                      "3" = "alta", 
+                                      "4" = "muy alta")
+df2$JobInvolvement <- as.factor(df2$JobInvolvement)
+df2$JobInvolvement <- recode(df2$JobInvolvement, 
+                             "1" = "Poco", 
+                             "2" = "Medio", 
+                             "3" = "Muy", 
+                             "4" = "Totalmente")
+df2$JobLevel <- as.factor(df2$JobLevel)
+df2$JobSatisfaction <- as.factor(df2$JobSatisfaction)
+df2$JobSatisfaction <- recode(df2$JobSatisfaction,
+                              "1" = "Poco", 
+                              "2" = "Medio", 
+                              "3" = "Satisfecho", 
+                              "4" = "Muy")
+df2$RelationshipSatisfaction <- as.factor(df2$RelationshipSatisfaction)
+df2$RelationshipSatisfaction <- recode(df2$RelationshipSatisfaction,
+                                       "1" = "Mala", 
+                                       "2" = "Media", 
+                                       "3" = "Buena", 
+                                       "4" = "Muy buena")
+df2$WorkLifeBalance <- as.factor(df2$WorkLifeBalance)
+df2$WorkLifeBalance <- recode(df2$WorkLifeBalance,
+                              "1" = "Poco equilibrio", 
+                              "2" = "Equilibrio medio", 
+                              "3" = "Buen equilibrio", 
+                              "4" = "Muy buen equilibrio")
 
 
 #2.Exploracion inicial de los datos####
@@ -36,22 +77,29 @@ df$AttritionNum <- as.numeric(df$Attrition)
 
 df %>% #histogramas variables numericas y ordinales
   keep(is.numeric) %>%
+  select(-c("Education",
+            "EnvironmentSatisfaction", 
+            "JobInvolvement", 
+            "JobLevel", 
+            "JobSatisfaction", 
+            "RelationshipSatisfaction", 
+            "WorkLifeBalance")) %>%
   gather(key, value, -AttritionNum) %>%
   ggplot(aes(value, fill = factor(AttritionNum))) + 
-    geom_histogram(alpha = 0.6, position = "identity") +
+    geom_histogram(position = "identity") +
     scale_fill_discrete(name = "Attrition", labels = c("No", "Yes")) +
     facet_wrap(~key, scales = "free") +
     theme_bw() +
     xlab("") +
     ylab("Número de personas")
 
-datosfac <- df[,sapply(df,is.factor)]
+datosfac <- df2[,sapply(df2,is.factor)]
 
 datosfac %>% #histogramas variables nominales
   gather(key = type_col, value = categories, -Attrition) %>%
   ggplot(aes(x = categories, fill = Attrition)) +
     geom_bar() + 
-    facet_wrap(~ type_col, scales = "free") +
+    facet_wrap(~ type_col, scales = "free", ncol = 5) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
     xlab("") +
@@ -152,3 +200,4 @@ analyzeContinuous(df = df, min = 0, max = 18, groupSize = 3, field = "YearsSince
 #salario
 #distancia
 #satisfacción
+#role
