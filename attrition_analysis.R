@@ -148,4 +148,7 @@ analyzeContinuous(df = df, min = 0, max = 18, groupSize = 3, field = "YearsSince
 
 
 #4.Graficas de las variables de interes####
-#edad, salario, distancia, satisfacción
+#edad
+#salario
+#distancia
+#satisfacción
