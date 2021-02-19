@@ -15,7 +15,7 @@ library(gridExtra)
 
 
 #1.Lectura de datos####
-df <- read.csv("attrition_data.csv", stringsAsFactors = T)
+df <- read.csv("https://raw.githubusercontent.com/alejotem11/grupal-ingenieria/master/attrition_data.csv", stringsAsFactors = T)
 colnames(df)[1] <- "Age"
 
 df <- select(df, -c("DailyRate",
@@ -84,7 +84,7 @@ analyzeContinuous <- function(df, min, max, groupSize = 5, minRowsToCount = 5, f
     geom_line() +
     scale_color_manual(breaks = dep.vector,
                        values = colors.dep.vector) +
-    ylab("Attritioned / Total") + theme_classic()
+    ylab("Ratio de salidas") + theme_classic()
   
   plot2 <- df %>%
     ggplot(aes_string(x=department, y=field, fill=department)) + 
@@ -109,7 +109,7 @@ analyzeDiscrete <- function(df, field, minRowsToCount = 5) {
     geom_line() +
     scale_color_manual(breaks = dep.vector,
                        values = colors.dep.vector) +
-    ylab("Attritioned / Total") + theme_classic()
+    ylab("Ratio de salidas") + theme_classic()
 }
 
 # Edad
