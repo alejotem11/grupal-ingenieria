@@ -69,13 +69,13 @@ df2$WorkLifeBalance <- recode(df2$WorkLifeBalance,
 
 
 #2.Exploracion inicial de los datos####
-summary(df) #media, min, max, mediana, cuartiles 1 y 3
+summary(df) #media, min, max, mediana, cuartiles 1 y 3 - Tabla 1 del informe
 
 datosnum <- df[,sapply(df,is.numeric)]
-sapply(datosnum, sd) #desviaciones estandard
+sapply(datosnum, sd) #desviaciones estandard - Tabla 1 del informe
 df$AttritionNum <- as.numeric(df$Attrition)
 
-df %>% #histogramas variables numericas y ordinales
+df %>% #histogramas variables numericas - Figura 1 del informe
   keep(is.numeric) %>%
   select(-c("Education",
             "EnvironmentSatisfaction", 
@@ -95,7 +95,7 @@ df %>% #histogramas variables numericas y ordinales
 
 datosfac <- df2[,sapply(df2,is.factor)]
 
-datosfac %>% #histogramas variables nominales
+datosfac %>% #histogramas variables nominales - Figura 2 del informe
   gather(key = type_col, value = categories, -Attrition) %>%
   ggplot(aes(x = categories, fill = Attrition)) +
     geom_bar() + 
@@ -106,7 +106,7 @@ datosfac %>% #histogramas variables nominales
     ylab("Número de personas")
     
 
-#3.Exploracion profunda de los datos####
+#3.Exploracion mas profunda de los datos####
 color.hr <- "#7EB9F8"
 color.dev <- "#FD7373"
 color.sales <- "#7AD067"
@@ -114,6 +114,7 @@ color.sales <- "#7AD067"
 dep.vector <- c("Human Resources", "Research & Development", "Sales")
 colors.dep.vector <- c(color.hr, color.dev, color.sales)
 
+#Funciones para graficar ratios de salida - Figura 3 del informe
 analyzeContinuous <- function(df, min, max, groupSize = 5, minRowsToCount = 5, field) {
   department <- "Department"
   df.inner <- df
@@ -214,4 +215,4 @@ df.jobRole %>%
 #salario
 #distancia
 #satisfacción
-#role
+#puesto de trabajo
