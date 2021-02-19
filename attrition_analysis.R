@@ -108,8 +108,8 @@ datosfac %>% #histogramas variables nominales
 
 #3.Exploracion profunda de los datos####
 color.hr <- "#7EB9F8"
-color.dev <- "black"
-color.sales <- "purple"
+color.dev <- "#FD7373"
+color.sales <- "#7AD067"
 
 dep.vector <- c("Human Resources", "Research & Development", "Sales")
 colors.dep.vector <- c(color.hr, color.dev, color.sales)
@@ -129,7 +129,7 @@ analyzeContinuous <- function(df, min, max, groupSize = 5, minRowsToCount = 5, f
 
   plot1 <- df.inner %>%
     ggplot(aes(x=Group, y=Ratio, group=Department, color=Department)) +
-    geom_line(size = 1) +
+    geom_line() +
     scale_color_manual(breaks = dep.vector,
                        values = colors.dep.vector) +
     ylab("Ratio de salidas") + theme_classic()
@@ -154,7 +154,7 @@ analyzeDiscrete <- function(df, field, minRowsToCount = 5) {
   
   df.inner %>%
     ggplot(aes_string(x=field, y="Ratio", group=department, color=department)) +
-    geom_line(size = 1) +
+    geom_line() +
     scale_color_manual(breaks = dep.vector,
                        values = colors.dep.vector) +
     ylab("Ratio de salidas") + theme_classic()
@@ -194,6 +194,20 @@ analyzeContinuous(df = df, min = 0, max = 20, field = "YearsInCurrentRole")
 # Años desde el último ascenso
 analyzeContinuous(df = df, min = 0, max = 18, groupSize = 3, field = "YearsSinceLastPromotion")
 
+# Satisfacción en el ambiente laboral
+df.jobRole <- df %>%
+  group_by(JobRole) %>%
+  summarise(TotalAttritioned = sum(Attrition=="Yes"),
+            Total = n(),
+            Ratio = if(Total > 5) (TotalAttritioned / Total) else NA)
+
+df.jobRole %>%
+  ggplot(aes(x=JobRole, y=Ratio)) +
+  geom_col() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  xlab("") +
+  ylab("Ratio de salidas")
 
 #4.Variables de interes seleccionadas apartir de las graficas####
 #edad
