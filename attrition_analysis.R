@@ -39,7 +39,7 @@ df %>% #histogramas variables numericas y ordinales
   gather(key, value, -AttritionNum) %>%
   ggplot(aes(value, fill = factor(AttritionNum))) + 
     geom_histogram(alpha = 0.6, position = "identity") +
-    scale_fill_discrete(name = "Attrition", labels = c("No", "Yest")) +
+    scale_fill_discrete(name = "Attrition", labels = c("No", "Yes")) +
     facet_wrap(~key, scales = "free") +
     theme_bw() +
     xlab("") +
