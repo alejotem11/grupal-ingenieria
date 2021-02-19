@@ -1,12 +1,22 @@
+##############################################################
+####Script de la actividad grupal de la asignatura
+####Ingeniería para el Procesado Masivo de Datos
+####Fecha: 18/02/2021
+####Alumns: Constantina Bindand, Iratxe Rubio Benito del Valle
+####y Luis Alejandro Tellez Godoy
+##############################################################
+
+#0.Paquetes necesarios para ejecutar el script
 library(dplyr)
 library(purrr)
 library(tidyr)
 library(ggplot2)
 library(gridExtra)
 
-setwd("/Users/alejandrotellez/latg/cursos/unir/master-big-data/1er_cuatrimestre/ingnieria_procesado_masivo_datos/actividades/03-analisis-exploratorio-con-r")
 
-df <- read.csv("attrition_data.csv", stringsAsFactors = T, sep = )
+#1.Lectura de datos####
+df <- read.csv("attrition_data.csv", stringsAsFactors = T)
+colnames(df)[1] <- "Age"
 
 df <- select(df, -c("DailyRate",
               "HourlyRate", 
@@ -16,18 +26,39 @@ df <- select(df, -c("DailyRate",
               "PerformanceRating", 
               "StandardHours"))
 
-summary(df)
 
-df$AttritionNum <- as.numeric(df$Attrition)
+#2.Exploracion inicial de los datos####
+summary(df) #media, min, max, mediana, cuartiles 1 y 3
 
-df %>%
+datosnum <- df[,sapply(df,is.numeric)]
+sapply(datosnum, sd)
+df$AttritionNum <- as.numeric(df$Attrition) #desviaciones estandard
+
+df %>% #histogramas variables numericas y ordinales
   keep(is.numeric) %>%
   gather(key, value, -AttritionNum) %>%
   ggplot(aes(value, fill = factor(AttritionNum))) + 
-  geom_histogram(alpha = 0.6, position = "identity") +
-  scale_fill_discrete(name = "Attrition", labels = c("No", "Yest")) +
-  facet_wrap(~key, scales = "free")
+    geom_histogram(alpha = 0.6, position = "identity") +
+    scale_fill_discrete(name = "Attrition", labels = c("No", "Yest")) +
+    facet_wrap(~key, scales = "free") +
+    theme_bw() +
+    xlab("") +
+    ylab("Número de personas")
 
+datosfac <- df[,sapply(df,is.factor)]
+
+datosfac %>% #histogramas variables nominales
+  gather(key = type_col, value = categories, -Attrition) %>%
+  ggplot(aes(x = categories, fill = Attrition)) +
+    geom_bar() + 
+    facet_wrap(~ type_col, scales = "free") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+    xlab("") +
+    ylab("Número de personas")
+    
+
+#3.Exploracion profunda de los datos####
 color.hr <- "darkblue"
 color.dev <- "darkred"
 color.sales <- "darkorange"
@@ -53,13 +84,13 @@ analyzeContinuous <- function(df, min, max, groupSize = 5, minRowsToCount = 5, f
     geom_line() +
     scale_color_manual(breaks = dep.vector,
                        values = colors.dep.vector) +
-    ylab("Attritioned / Total")
+    ylab("Attritioned / Total") + theme_classic()
   
   plot2 <- df %>%
     ggplot(aes_string(x=department, y=field, fill=department)) + 
     geom_boxplot() +
     scale_fill_manual(breaks = dep.vector,
-                      values = colors.dep.vector)
+                      values = colors.dep.vector) + theme_classic()
   
   grid.arrange(plot1, plot2, nrow=2)
 }
@@ -78,9 +109,8 @@ analyzeDiscrete <- function(df, field, minRowsToCount = 5) {
     geom_line() +
     scale_color_manual(breaks = dep.vector,
                        values = colors.dep.vector) +
-    ylab("Attritioned / Total")
+    ylab("Attritioned / Total") + theme_classic()
 }
-
 
 # Edad
 minAge <- 20
@@ -117,6 +147,5 @@ analyzeContinuous(df = df, min = 0, max = 20, field = "YearsInCurrentRole")
 analyzeContinuous(df = df, min = 0, max = 18, groupSize = 3, field = "YearsSinceLastPromotion")
 
 
-
-
-
+#4.Graficas de las variables de interes####
+#edad, salario, distancia, satisfacción
